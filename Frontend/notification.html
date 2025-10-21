@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notifications - CHILDTrack</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: url('background.jpg') no-repeat center center/cover;
+      color: white;
+    }
+
+    /* Sidebar transparent glass effect */
+    .sidebar {
+      width: 230px;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 20px;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .sidebar h2 {
+      margin: 0 0 20px 0;
+      font-size: 22px;
+    }
+    .sidebar h2 span { color: #ff4c68; }
+    .sidebar a, .dropdown-btn {
+      display: block;
+      padding: 12px;
+      margin: 6px 0;
+      border-radius: 8px;
+      text-decoration: none;
+      color: rgb(26, 63, 142);
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .sidebar a:hover, .dropdown-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+    .dropdown-container {
+      display: none;
+      padding-left: 15px;
+    }
+    .dropdown-container a { font-size: 14px; }
+
+    /* Content */
+    .content {
+      margin-left: 250px;
+      padding: 30px;
+    }
+    .content h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    /* Notification list */
+    .notifications {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Notification Cards (solid colors instead of transparent) */
+    .notification {
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .notification:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+
+    /* Different solid colors for each type */
+    .info {
+      background: #1d3557;
+    }
+    .alert {
+      background: #e63946;
+    }
+    .success {
+      background: #2a9d8f;
+    }
+    .warning {
+      background: #ffb703;
+      color: black;
+    }
+
+    /* Icon */
+    .icon {
+      font-size: 24px;
+      padding: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Text */
+    .text {
+      flex: 1;
+    }
+    .title {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .time {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>CHILD<span>Track</span></h2>
+    <a href="index.html">🏠 Home Dashboard</a>
+
+    <button class="dropdown-btn">📊 Dashboards ▼</button>
+    <div class="dropdown-container">
+      <a href="notifications.html">🔔 Notifications</a>
+      <a href="attendance.html">📝 Attendance</a>
+      <a href="absences.html">📋 Absences</a>
+      <a href="dropouts.html">📉 Dropouts</a>
+      <a href="unauthorized.html">❌ Unauthorized</a>
+      <a href="students.html">👨‍🎓 Students</a>
+      <a href="guardians.html">👪 Guardians</a>
+    </div>
+
+    <a href="#">⚙ Settings</a>
+    <a href="#">📄 Reports</a>
+    <a href="#">🔑 Logout</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <h1>🔔 Notifications</h1>
+    <div class="notifications">
+      <div class="notification info">
+        <div class="icon">ℹ️</div>
+        <div class="text">
+          <div class="title">System Update</div>
+          <div class="desc">New features have been added to the dashboard.</div>
+          <div class="time">2 minutes ago</div>
+        </div>
+      </div>
+
+      <div class="notification alert">
+        <div class="icon">⚠️</div>
+        <div class="text">
+          <div class="title">Unauthorized Entry Detected</div>
+          <div class="desc">A student attempted entry without QR verification.</div>
+          <div class="time">10 minutes ago</div>
+        </div>
+      </div>
+
+      <div class="notification success">
+        <div class="icon">✅</div>
+        <div class="text">
+          <div class="title">Attendance Recorded</div>
+          <div class="desc">Class 10-B attendance successfully updated.</div>
+          <div class="time">30 minutes ago</div>
+        </div>
+      </div>
+
+      <div class="notification warning">
+        <div class="icon">⚡</div>
+        <div class="text">
+          <div class="title">Network Warning</div>
+          <div class="desc">Server connection was interrupted briefly.</div>
+          <div class="time">1 hour ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dropdown toggle
+    document.querySelector(".dropdown-btn").addEventListener("click", function() {
+      let container = this.nextElementSibling;
+      container.style.display = (container.style.display === "block") ? "none" : "block";
+    });
+  </script>
+</body>
+</html>

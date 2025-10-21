@@ -1,0 +1,208 @@
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">CHILD<span>Track</span></div>
+    <nav>
+     <div class="menu-item">
+      <button class="menu-btn" id="dashboardToggle">📊 Dashboard ▾</button>
+      <div class="submenu" id="dashboardMenu">
+        <a href="attendance.html">✔ Attendance</a>
+        <a href="dropouts.html">📉 Dropouts</a>
+        <a href="absences.html">❌ Absences</a>
+        <a href="home.html">🏠 Home</a>
+        
+      </div>
+    </div>
+    <a href="student.html">👩‍🎓 Students</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <h1>Absences Management</h1>
+      <div class="header-actions">
+        <button class="dark-mode-toggle" id="darkModeBtn">🌙</button>
+        <button class="back-btn" id="backBtn">Back</button>
+      </div>
+    </header>
+
+    <!-- Add Form -->
+    <section class="form-container">
+      <input type="text" id="name" placeholder="Student Name">
+      <input type="date" id="date">
+      <input type="text" id="reason" placeholder="Reason">
+      <button id="addBtn">Add</button>
+    </section>
+
+    <!-- Absence Records -->
+    <section class="absence-container">
+      <h2>Absence Records</h2>
+      <table class="absence-table" id="absenceTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Reason</th>
+            <th style="text-align:center;">Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+</div>
+
+<style>
+/* --- Layout & Sidebar --- */
+body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f5f6fa; transition: background 0.3s, color 0.3s; }
+.layout { display: flex; }
+.sidebar { background: #0c1245; color: white; width: 230px; min-height: 100vh; padding: 20px; }
+.sidebar .logo { font-size: 22px; font-weight: bold; margin-bottom: 40px; }
+.sidebar .logo span { color: #fcba05; }
+.sidebar nav a { display: block; color: white; text-decoration: none; padding: 12px 0; font-size: 15px; border-radius: 6px; transition: background 0.3s; }
+.sidebar nav a:hover { background: rgba(255, 255, 255, 0.1); padding-left: 8px; }
+
+/* --- Main Content --- */
+.main-content { flex: 1; padding: 20px; }
+
+/* --- Header --- */
+.header { display: flex; justify-content: space-between; align-items: center; background: #14218f; color: rgb(255, 213, 4); padding: 12px 20px; border-radius: 10px; }
+.header-actions button { margin-left: 10px; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.dark-mode-toggle { background: rgb(59, 110, 161); }
+.back-btn { background: #ff4f79; color: white; }
+
+/* --- Form --- */
+.form-container { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+.form-container input, .form-container button { padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; }
+#addBtn { background: #14218f; color: white; border: none; cursor: pointer; }
+#addBtn:hover { background: #0d1760; }
+
+/* --- Absence Table --- */
+.absence-container { margin-top: 20px; background: rgb(192, 216, 255); padding: 30px; border-radius: 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.08); width: 100%; }
+.absence-table { width: 100%; border-collapse: collapse; font-size: 16px; }
+.absence-table th, .absence-table td { padding: 14px 18px; text-align: left; }
+.absence-table th { background-color: #2d72d3; font-weight: bold; }
+.absence-table tr:hover { background-color: #c4b6c4; }
+
+/* --- Buttons --- */
+.actions { text-align: center; display: flex; gap: 10px; justify-content: center; }
+.btn-action { border: none; padding: 10px; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: all 0.25s ease; }
+.btn-action.edit { background: #ffe8a3; color: #8a6d1c; }
+.btn-action.delete { background: #ffb3b3; color: #d60707; }
+.btn-action:hover { transform: scale(1.12); box-shadow: 0 5px 14px rgba(0,0,0,0.15); }
+
+/* --- Dark Mode --- */
+body.dark { background: #445980; color: #eee; }
+body.dark .absence-container { background: #2c5795; }
+body.dark .absence-table th { background: #4c95c3; }
+body.dark .form-container input, body.dark .form-container button { background: #333; color: white; border: 1px solid #555; }
+body.dark .header { background: #7d90b5; }
+
+/* Submenu hidden by default */
+.submenu {
+  display: none;
+  flex-direction: column;
+  margin-left: 15px;
+}
+.submenu a {
+  font-size: 14px;
+  padding: 8px 10px;
+}
+.submenu a:hover {
+  background: rgba(255,255,255,0.1);
+}
+.submenu.active {
+  display: flex;
+}
+</style>
+
+<script>
+let editIndex = null;
+
+function loadData() {
+  const data = JSON.parse(localStorage.getItem("absenceData")) || [];
+  const tbody = document.querySelector("#absenceTable tbody");
+  tbody.innerHTML = "";
+  data.forEach((row, index) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${row.name}</td>
+      <td>${row.date}</td>
+      <td>${row.reason}</td>
+      <td class="actions">
+        <button class="btn-action edit" onclick="editRow(${index})">✏️</button>
+        <button class="btn-action delete" onclick="deleteRow(${index})">🗑️</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function saveData(data) {
+  localStorage.setItem("absenceData", JSON.stringify(data));
+}
+
+document.getElementById("addBtn").addEventListener("click", () => {
+  const name = document.getElementById("name").value.trim();
+  const date = document.getElementById("date").value;
+  const reason = document.getElementById("reason").value.trim();
+
+  if (!name || !date || !reason) {
+    alert("Please fill all fields.");
+    return;
+  }
+
+  let data = JSON.parse(localStorage.getItem("absenceData")) || [];
+
+  if (editIndex === null) {
+    data.push({ name, date, reason });
+  } else {
+    data[editIndex] = { name, date, reason };
+    editIndex = null;
+  }
+
+  saveData(data);
+  loadData();
+
+  document.getElementById("name").value = "";
+  document.getElementById("date").value = "";
+  document.getElementById("reason").value = "";
+});
+
+// Delete Row
+function deleteRow(index) {
+  let data = JSON.parse(localStorage.getItem("absenceData")) || [];
+  data.splice(index, 1);
+  saveData(data);
+  loadData();
+}
+
+// Edit Row
+function editRow(index) {
+  let data = JSON.parse(localStorage.getItem("absenceData")) || [];
+  document.getElementById("name").value = data[index].name;
+  document.getElementById("date").value = data[index].date;
+  document.getElementById("reason").value = data[index].reason;
+  editIndex = index;
+}
+
+// Back Button
+document.getElementById("backBtn").addEventListener("click", () => {
+  alert("Back button clicked! (Dito mo pwede i-redirect sa dashboard)");
+  // Example: window.location.href = "dashboard.html";
+});
+
+// Toggle Dashboard submenu
+document.getElementById("dashboardToggle").addEventListener("click", () => {
+  document.getElementById("dashboardMenu").classList.toggle("active");
+});
+
+// Dark Mode Toggle
+document.getElementById("darkModeBtn").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+});
+window.onload = loadData;
+
+</script>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Registration</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: url('background.jpg') no-repeat center center/cover;
+      color: #333;
+      display: flex;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 200px;
+      height: 100vh;
+      background: rgba(34, 74, 190, 0.5);
+      backdrop-filter: blur(8px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 20px;
+      color: #f8f9fc;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 20px 0;
+      color: #fff;
+    }
+
+    .sidebar a, .dropdown-btn {
+      display: block;
+      padding: 10px;
+      margin: 5px 0;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background 0.3s;
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    .sidebar a:hover, .dropdown-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .dropdown-container {
+      display: none;
+      padding-left: 15px;
+    }
+
+    /* Content */
+    .content {
+      margin-left: 250px;
+      padding: 30px;
+      flex: 1;
+    }
+
+    /* Top bar */
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .toggle-btn, .teacher-btn {
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 10px 16px;
+      transition: 0.3s;
+    }
+
+    .toggle-btn {
+      background: #1960ac;
+      color: #fff;
+    }
+    .toggle-btn:hover {
+      background: #14508c;
+    }
+
+    .teacher-btn {
+      background: #2b7dc5;
+      color: #222;
+      text-decoration: none;
+    }
+    .teacher-btn:hover {
+      background: #428ec8;
+    }
+
+    .content h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+
+    /* Registration Box */
+    .register-box {
+      background: #ffffff;
+      padding: 25px 30px;
+      border-radius: 18px;
+      width: 400px;
+      margin: auto;
+      color: #333;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .register-box h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 22px;
+      color: #224abe;
+    }
+
+    .register-box label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    .register-box input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .register-box input:focus {
+      outline: none;
+      border-color: #4e73df;
+      box-shadow: 0 0 5px rgba(78,115,223,0.5);
+    }
+
+    .register-box button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #4e73df;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .register-box button:hover {
+      background: #2e59d9;
+    }
+
+    /* Student List Table */
+    .student-list {
+      margin-top: 30px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      color: #333;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .student-list h3 {
+      margin-bottom: 15px;
+      color: #224abe;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    table th, table td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+
+    table th {
+      background: #224abe;
+      color: white;
+    }
+
+    table tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    /* Buttons inside table */
+    .action-btn {
+      padding: 5px 10px;
+      margin: 0 2px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .edit-btn {
+      background: #4caf50;
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background: #45a049;
+    }
+
+    .delete-btn {
+      background: #e74a3b;
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+
+    /* Dark Mode */
+    body.dark {
+      background: url('Dark.jpg') no-repeat center center/cover;
+      color: #f1f1f1;
+    }
+
+    body.dark .sidebar {
+      background: rgba(25, 25, 25, 0.399);
+      color: #ddd;
+    }
+
+    body.dark .sidebar a, 
+    body.dark .dropdown-btn {
+      color: #ddd;
+    }
+
+    body.dark .content h1 {
+      color: #fff;
+    }
+
+    body.dark .register-box {
+      background: #222;
+      color: #f1f1f1;
+    }
+
+    body.dark .register-box h2 {
+      color: #3749d7;
+    }
+
+    body.dark .register-box input {
+      background: #333;
+      border: 1px solid #555;
+      color: #eee;
+    }
+
+    body.dark .student-list {
+      background: #222;
+      color: #f1f1f1;
+    }
+
+    body.dark .student-list h3 {
+      color: #ffdf4c;
+    }
+
+    body.dark table th {
+      background: #444;
+      color: #ffdf4c;
+    }
+
+    body.dark table td {
+      background: #333;
+      color: #eee;
+    }
+
+    body.dark table tr:nth-child(even) {
+      background: #2a2a2a;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>CHILD<span style="color:#ffdf4c;">Track</span></h2>
+    <button class="dropdown-btn">📊 Dashboard ▼</button>
+    <div class="dropdown-container">
+      <a href="attendance.html">📝 Attendance</a>
+      <a href="absences.html">📋 Absences</a>
+      <a href="dropouts.html">📉 Dropouts</a>
+      <a href="notification.html">🔔 Notifications</a>
+      <a href="home.html">🏠 Home Dashboard</a>
+    </div>
+    <a href="register.html">👨‍🎓 Student Registration</a>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="topbar">
+      <a href="Teacher's registration.html" class="teacher-btn">👩‍🏫 Teacher Login</a>
+      <button class="toggle-btn" id="darkModeBtn">🌙</button>
+    </div>
+
+    <h1>👨‍🎓 Student Registration</h1>
+
+    <div class="register-box">
+      <h2>Register Student</h2>
+      <form id="registerForm">
+        <label for="studentName">Student Name</label>
+        <input type="text" id="studentName" required>
+
+        <label for="guardian/parentName">Guardian/Parent Name</label>
+        <input type="text" id="guardian/parentName" required>
+
+        <label for="lrn">LRN Number</label>
+        <input type="text" id="lrn" required>
+
+        <button type="submit">Register</button>
+      </form>
+    </div>
+
+    <div class="student-list">
+      <h3>📋 Registered Students</h3>
+      <table id="studentTable">
+        <thead>
+          <tr>
+            <th>Student List</th>
+            <th>Guardian/Parents Name</th>
+            <th>LRN</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Dropdown toggle
+    document.querySelector(".dropdown-btn").addEventListener("click", function() {
+      this.classList.toggle("active");
+      const dropdownContent = this.nextElementSibling;
+      dropdownContent.style.display =
+        dropdownContent.style.display === "block" ? "none" : "block";
+    });
+
+    // Registration form
+    const form = document.getElementById('registerForm');
+    const studentTableBody = document.querySelector('#studentTable tbody');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('studentName').value;
+      const guardian = document.getElementById('guardianName').value;
+      const lrn = document.getElementById('lrn').value;
+
+      if(name && guardian && lrn){
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${name}</td>
+          <td>${guardian}</td>
+          <td>${lrn}</td>
+          <td>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </td>
+        `;
+        studentTableBody.appendChild(row);
+        form.reset();
+      }
+    });
+
+    // Delegate Edit & Delete actions
+    studentTableBody.addEventListener('click', function(e) {
+      if (e.target.classList.contains('delete-btn')) {
+        e.target.closest('tr').remove();
+      }
+
+      if (e.target.classList.contains('edit-btn')) {
+        const row = e.target.closest('tr');
+        const cells = row.querySelectorAll('td');
+
+        const newName = prompt("Edit Student Name:", cells[0].textContent);
+        const newGuardian = prompt("Edit Guardian Name:", cells[1].textContent);
+        const newLRN = prompt("Edit LRN:", cells[2].textContent);
+
+        if (newName && newGuardian && newLRN) {
+          cells[0].textContent = newName;
+          cells[1].textContent = newGuardian;
+          cells[2].textContent = newLRN;
+        }
+      }
+    });
+
+    // Dark mode toggle
+    const darkModeBtn = document.getElementById('darkModeBtn');
+    darkModeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      darkModeBtn.textContent = document.body.classList.contains('dark') ? "☀️" : "🌙";
+    });
+  </script>
+
+</body>
+</html>

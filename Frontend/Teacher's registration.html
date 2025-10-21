@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Registration</title>
+</head>
+<body>
+  <h2>Teacher Registration</h2>
+  <form id="registerForm">
+    <input type="text" id="name" placeholder="Name" required><br><br>
+    <input type="number" id="age" placeholder="Age" required><br><br>
+    <input type="text" id="gender" placeholder="Gender" required><br><br>
+    <input type="text" id="section" placeholder="Section" required><br><br>
+    <input type="text" id="grade_handling" placeholder="Grade Handling" required><br><br>
+    <input type="text" id="contact" placeholder="Contact Number" required><br><br>
+    <input type="text" id="address" placeholder="Address" required><br><br>
+    <input type="password" id="password" placeholder="Password" required><br><br>
+    <button type="submit">Register</button>
+  </form>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const teacher = {
+        name: document.getElementById("name").value,
+        age: document.getElementById("age").value,
+        gender: document.getElementById("gender").value,
+        section: document.getElementById("section").value,
+        grade_handling: document.getElementById("grade_handling").value,
+        contact: document.getElementById("contact").value,
+        address: document.getElementById("address").value,
+        password: document.getElementById("password").value
+      };
+
+      const res = await fetch("http://localhost:5000/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(teacher)
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert("Registration successful!");
+        window.location.href = "login.html";
+      } else {
+        alert("Error: " + data.error);
+      }
+    });
+  </script>
+</body>
+</html>

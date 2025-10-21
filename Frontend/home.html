@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+</head>
+<body>
+  <h2>Dashboard</h2>
+  <button onclick="loadAttendance()">Load Attendance</button>
+  <ul id="attendanceList"></ul>
+
+  <script>
+    async function loadAttendance() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You must log in first!");
+        window.location.href = "login.html";
+        return;
+      }
+
+      const res = await fetch("http://localhost:5000/api/attendance", {
+        headers: { "Authorization": token }
+      });
+
+      const data = await res.json();
+      const list = document.getElementById("attendanceList");
+      list.innerHTML = "";
+
+      data.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.student_name} - ${item.date} - ${item.status}`;
+        list.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
